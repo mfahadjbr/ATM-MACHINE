@@ -22,21 +22,49 @@ if(pinAnswer.pin==myPin){
         }
     ])
     if(Answer1.operation == "Withdraw Amount"){
-        let amountAns=await inquirer.prompt([
+        let Withdrawans=await inquirer.prompt([
             {
-                type:'number',
-                name:'amount',
-                message:'Enter the amount to Withdraw ='
+                type:'list',
+                name:'withdrawmethod',
+                message:'select a withdraw method',
+                choices:['Fast cash','Enter amount']
             }
         ])
-        if(amountAns.amount > myBalance){
-            console.log(chalk.yellow("Insufficient Balance"));
-        }else{
-            myBalance -= amountAns.amount;
-            console.log(chalk.white(`your Remaining Balance : ${myBalance}`));
+        if(Withdrawans.withdrawmethod=='Fast cash'){
+            let fastcashans=await inquirer.prompt([
+                {
+                    name:'fashcash',
+                    type:'list',
+                    message:'select option:',
+                    choices:[1000,2000,3000,10000,50000]
+                }
+            ])
+            if(fastcashans.fashcash>myBalance){
+                console.log(chalk.yellow('Insufficient Balance'));
+            }else{
+                myBalance-=fastcashans.fashcash;
+                console.log(`${fastcashans.fashcash} withdraw successfully.`);
+                console.log(`your Remaining Balance : ${myBalance}`);
+            }
+        }
+        else if(Withdrawans.withdrawmethod=='Enter amount'){
+            let amountAns=await inquirer.prompt([
+                {
+                    type:'number',
+                    name:'amount',
+                    message:'Enter the amount to Withdraw ='
+                }
+            ])
+            if(amountAns.amount > myBalance){
+                console.log(chalk.yellow("Insufficient Balance"));
+            }else{
+                myBalance -= amountAns.amount;
+                console.log(`${amountAns.amount} withdraw successfully.`);
+                console.log(chalk.white(`your Remaining Balance : ${myBalance}`));
+            }
         }
     }
-    if(Answer1.operation == 'check Balance'){
+    else if(Answer1.operation == 'check Balance'){
         console.log(chalk.white(`your Remaining Balance : ${myBalance}`));
     }
 }else{
